@@ -2,6 +2,7 @@
 .vs/
 
 Content/Scenes/Background/*
+Content/Scenes/IMG_1966__2__Sprite.uasset
 
 # Compiled Object files
 *.slo
@@ -10,8 +11,8 @@ Content/Scenes/Background/*
 *.obj
 
 # Precompiled Headers
-# *.gch
-# *.pch
+*.gch
+*.pch
 
 # Compiled Dynamic libraries
 *.so

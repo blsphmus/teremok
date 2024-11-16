@@ -12,7 +12,6 @@ void AStaticCameraGameMode::BeginPlay()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundActors);
 	
-
 	if (FoundActors.Num() > 0)
 	{
 		// Assume the first CameraActor is the one we want to use
