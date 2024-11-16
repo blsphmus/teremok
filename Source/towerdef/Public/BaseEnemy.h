@@ -29,19 +29,18 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprite")
-	UPaperSpriteComponent* SpriteComponent;
+	TArray<UPaperSpriteComponent*> SpriteComponents;
 	ACameraActor* TargetCamera;
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float Health{500};
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int Health{500};
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void TakeDamage(float DamageAmount);
-	//void FindAndRotateToCamera();
-
 	float Damage{5};
-		
+	void ResetSpriteToDefault();
+	
 	FTimerHandle DetectPulseTimerHandle;
 	float DetectSphereRadius = 1000.0f;
 	float DetectPulseInterval = 0.2f;
