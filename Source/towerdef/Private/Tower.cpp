@@ -12,23 +12,33 @@ ATower::ATower()
     ProjectileSpriteComponent->SetupAttachment(RootComponent);
     ProjectileSpriteComponent->SetVisibility(false);
 
-    SpriteComponent->SetRelativeScale3D(FVector3d(0.4f, 0.4f, 0.4f));
-    ProjectileSpriteComponent->SetRelativeScale3D(FVector3d(0.4f, 0.4f, 0.4f));
+    SpriteComponent->SetRelativeScale3D(FVector3d(0.6f, 0.6f, 0.6f));
+    ProjectileSpriteComponent->SetRelativeScale3D(FVector3d(0.6f, 0.6f, 0.6f));
 
 }
 
 void ATower::BeginPlay()
 {
     Super::BeginPlay();
-    ProjectileSpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    if (GetWorld())
+    {
+        ProjectileSpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-    GetWorld()->GetTimerManager().SetTimer(
-        AttackPulseTimerHandle,
-        this,
-        &ATower::DetectAndAttack,
-        1.0f / AttackSpeed,
-        true
-    );
+        if (!AttackPulseTimerHandle.IsValid())
+        {
+            GetWorld()->GetTimerManager().SetTimer(
+                AttackPulseTimerHandle,
+                this,
+                &ATower::DetectAndAttack,
+                1.0f / AttackSpeed,
+                true
+            );
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("World is null!"));
+    }
 }
 
 void ATower::Tick(float DeltaTime)
@@ -50,7 +60,12 @@ void ATower::Tick(float DeltaTime)
 
 void ATower::DetectAndAttack()
 {
-    
+    if (!GetWorld())
+    {
+        UE_LOG(LogTemp, Error, TEXT("World is null!"));
+        return;
+    }
+
     TArray<AActor*> OverlappingActors;
     TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Visibility));
@@ -66,7 +81,6 @@ void ATower::DetectAndAttack()
 
     if (OverlappingActors.Num() > 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Tower found an enemy"));
         Target = Cast<ABaseEnemy>(OverlappingActors[0]);
 
         if (Target && !bIsProjectileActive)
@@ -74,6 +88,11 @@ void ATower::DetectAndAttack()
             RotateSpriteToFace(SpriteComponent, Target->GetActorLocation());
             LaunchProjectile();
         }
+    }
+    else
+    {
+        // If no target is found, reset the target
+        Target = nullptr;
     }
 }
 

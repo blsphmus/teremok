@@ -33,7 +33,7 @@ public:
 
 	FTimerHandle AttackPulseTimerHandle;
 	FTimerHandle ProjectileTimerHandle;
-
+	
 	ABaseEnemy* Target = nullptr;
 
 	bool bIsProjectileActive = false;

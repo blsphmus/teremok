@@ -10,8 +10,8 @@ Content/Scenes/Background/*
 *.obj
 
 # Precompiled Headers
-*.gch
-*.pch
+# *.gch
+# *.pch
 
 # Compiled Dynamic libraries
 *.so

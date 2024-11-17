@@ -24,20 +24,30 @@ public:
 
 	FTimerHandle SpawnTimerHandle;
 
+	void SpawnWave(int RoundIndex);
+
+	UFUNCTION(CallInEditor, Category = "Spawning")
+	void Spawnsmth();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	float SpawnInterval = 2.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	int32 NumEnemiesToSpawn = 10;
 
-	int32 NumEnemiesSpawned = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	float SpawnRadius = 400.0f;
+    
+	int32 RemainingEnemies = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector SpawnLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FRotator SpawnRotation;
-
+    
+	void SpawnOnBothSides();
+    
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABaseEnemy> EnemyBlueprintClass;
 };

@@ -52,8 +52,6 @@ void Atower_frame::BeginPlay()
         SpriteComponents[i]->SetWorldRotation(CameraFacingRotation);
         SpriteComponents[i]->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
     }
-
-    SetBasicTowerIntoFirstSlot();
 }
 
 void Atower_frame::Tick(float DeltaTime)
@@ -86,29 +84,60 @@ void Atower_frame::ActivateTowerOnSlot(int SlotIndex, int TowerType)
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
     Towers[SlotIndex] = GetWorld()->SpawnActor<ATower>(ATower::StaticClass(), GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
-
-    if (Towers[SlotIndex]) {
-        // Set tower properties based on TowerType
-        if (TowerType == 0) {
-            Towers[SlotIndex]->AttackDamage = 10;
-            Towers[SlotIndex]->AttackRange = 1000;
-            Towers[SlotIndex]->AttackSpeed = 10;
-            Towers[SlotIndex]->ProjectileSpeed = 5500;
-            Towers[SlotIndex]->ProjectileSpriteComponent->SetSprite(ProjectileSprites[0]->GetSprite());
-            Towers[SlotIndex]->SpriteComponent->SetSprite(TowersSprites[0]->GetSprite());
-            Towers[SlotIndex]->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-            Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 200));
-            Towers[SlotIndex]->SpriteComponent->SetVisibility(true);
-            Towers[SlotIndex]->SpriteComponent->SetHiddenInGame(false);
-            UE_LOG(LogTemp, Warning, TEXT("Tower activated at slot %d"), SlotIndex);
-        }
+    Towers[SlotIndex]->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    Towers[SlotIndex]->SpriteComponent->SetUsingAbsoluteRotation(true);
+    FRotator CameraFacingRotation(0.0f, 0.0f, -90.0f);
+    Towers[SlotIndex]->SpriteComponent->SetWorldRotation(CameraFacingRotation);
+    Towers[SlotIndex]->SpriteComponent->SetVisibility(true);
+    Towers[SlotIndex]->SpriteComponent->SetHiddenInGame(false);
+    
+    if (TowerType == 0) {
+        Towers[SlotIndex]->AttackDamage = 30;
+        Towers[SlotIndex]->AttackRange = 1000;
+        Towers[SlotIndex]->AttackSpeed = 1;
+        Towers[SlotIndex]->ProjectileSpeed = 3000;
+        Towers[SlotIndex]->ProjectileSpriteComponent->SetSprite(ProjectileSprites[1]->GetSprite());
+        Towers[SlotIndex]->SpriteComponent->SetSprite(TowersSprites[1]->GetSprite());
+            
+    } else if (TowerType == 1)
+    {
+        Towers[SlotIndex]->AttackDamage = 50;
+        Towers[SlotIndex]->AttackRange = 1000;
+        Towers[SlotIndex]->AttackSpeed = 2;
+        Towers[SlotIndex]->ProjectileSpeed = 5500;
+        Towers[SlotIndex]->ProjectileSpriteComponent->SetSprite(ProjectileSprites[0]->GetSprite());
+        Towers[SlotIndex]->SpriteComponent->SetSprite(TowersSprites[0]->GetSprite());
+            
+    } else if (TowerType == 2)
+    {
+        Towers[SlotIndex]->AttackDamage = 50;
+        Towers[SlotIndex]->AttackRange = 1000;
+        Towers[SlotIndex]->AttackSpeed = 10;
+        Towers[SlotIndex]->ProjectileSpeed = 5500;
+        Towers[SlotIndex]->ProjectileSpriteComponent->SetSprite(ProjectileSprites[2]->GetSprite());
+        Towers[SlotIndex]->SpriteComponent->SetSprite(TowersSprites[2]->GetSprite());
     }
+
+    if (SlotIndex == 0) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 1) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X, GetActorLocation().Y-650, GetActorLocation().Z + 20));
+    } else if (SlotIndex == 2) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X+420.f, GetActorLocation().Y, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 3) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X+660.f, GetActorLocation().Y-100, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 4) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X+420.f, GetActorLocation().Y-650, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 5) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X-390.f, GetActorLocation().Y, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 6) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X-450.f, GetActorLocation().Y-350, GetActorLocation().Z + 80));
+    } else if (SlotIndex == 7) {
+        Towers[SlotIndex]->SetActorLocation(FVector3d(GetActorLocation().X-490.f, GetActorLocation().Y-700, GetActorLocation().Z + 80));
+    }
+    
 }
 
-void Atower_frame::SetBasicTowerIntoFirstSlot()
-{
-    ActivateTowerOnSlot(0, 0);
-}
 
 void Atower_frame::Evo()
 {
@@ -128,7 +157,7 @@ void Atower_frame::Evo()
         SpriteComponents[2]->SetVisibility(true);
         SpriteComponents[2]->SetHiddenInGame(false);
         SpriteComponents[2]->SetRelativeLocation(FVector(SpriteComponents[2]->GetRelativeLocation().X,
-                    SpriteComponents[2]->GetRelativeLocation().Y-907.f, SpriteComponents[2]->GetRelativeLocation().Z));
+                    SpriteComponents[2]->GetRelativeLocation().Y-905.f*0, SpriteComponents[2]->GetRelativeLocation().Z));
         break;
 
     case 2:
@@ -141,7 +170,7 @@ void Atower_frame::Evo()
 
         SpriteComponents[4]->SetVisibility(true);
         SpriteComponents[4]->SetHiddenInGame(false);
-        SpriteComponents[4]->SetRelativeLocation(FVector(SpriteComponents[4]->GetRelativeLocation().X+550.f,
+        SpriteComponents[4]->SetRelativeLocation(FVector(SpriteComponents[4]->GetRelativeLocation().X+550,
                     SpriteComponents[4]->GetRelativeLocation().Y, SpriteComponents[4]->GetRelativeLocation().Z));
 
         break;
@@ -238,4 +267,21 @@ void Atower_frame::EvoNull()
     SpriteComponents[0]->SetVisibility(true);
     SpriteComponents[0]->SetHiddenInGame(false);
     
+}
+
+bool Atower_frame::SetTowerToSlot(int TowerType)
+{
+    if (TowerCount <= 8)
+    {
+        if ((TowerCount == 0 and Evo_counter == 0) or (TowerCount < 2 and Evo_counter == 1) or
+            (TowerCount < 4 and Evo_counter == 2) or (TowerCount < 5 and Evo_counter == 3) or
+            (TowerCount < 7 and Evo_counter == 4) or (TowerCount < 8 and Evo_counter == 5))
+        {
+            ActivateTowerOnSlot(TowerCount, TowerType);
+            TowerCount++;
+            return true;
+        }
+        return false;
+    }
+    return false;
 }

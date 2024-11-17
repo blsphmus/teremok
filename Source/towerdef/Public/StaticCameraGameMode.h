@@ -4,7 +4,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "StaticCameraGameMode.generated.h"
 
-
 UCLASS()
 class TOWERDEF_API AStaticCameraGameMode : public AGameModeBase
 {

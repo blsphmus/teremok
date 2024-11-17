@@ -24,6 +24,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float Health{1500};
 
+	int TowerCount{0};
+	
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void TakeDamage(float DamageAmount);
 
@@ -52,5 +54,5 @@ public:
 	void EvoNull();
 
 	UFUNCTION(CallInEditor, Category = "Tower Frame")
-	void SetBasicTowerIntoFirstSlot();
+	bool SetTowerToSlot(int TowerType);
 };

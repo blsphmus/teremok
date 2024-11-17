@@ -16,6 +16,8 @@
 #include "PaperSpriteComponent.h"
 #include "BaseEnemy.generated.h"
 
+class Spawner;
+
 UCLASS()
 class TOWERDEF_API ABaseEnemy : public ACharacter
 {
@@ -28,21 +30,22 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprite")
 	TArray<UPaperSpriteComponent*> SpriteComponents;
 	ACameraActor* TargetCamera;
-	
+    
 public:
-	
+    
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int Health{500};
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void TakeDamage(float DamageAmount);
 	float Damage{5};
 	void ResetSpriteToDefault();
-	
+    
 	FTimerHandle DetectPulseTimerHandle;
-	float DetectSphereRadius = 1000.0f;
+	float DetectSphereRadius = 2500.0f;
 	float DetectPulseInterval = 0.2f;
 	void DetectPulse();
 
@@ -55,4 +58,7 @@ public:
 	void MoveTowardsTarget(float DeltaTime);
 	float StoppingDistance = 50.0f;
 	Atower_frame* Target = nullptr;
+
+private:
+	void ChooseRandomSprites();
 };
