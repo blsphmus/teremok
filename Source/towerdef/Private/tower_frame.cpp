@@ -52,6 +52,8 @@ void Atower_frame::BeginPlay()
         SpriteComponents[i]->SetWorldRotation(CameraFacingRotation);
         SpriteComponents[i]->SetWorldScale3D(FVector(0.5f, 0.5f, 0.5f));
     }
+
+    SetBasicTowerIntoFirstSlot();
 }
 
 void Atower_frame::Tick(float DeltaTime)

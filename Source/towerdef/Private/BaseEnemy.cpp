@@ -1,5 +1,6 @@
 #include "BaseEnemy.h"
 
+#include "AIController.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -20,6 +21,11 @@ ABaseEnemy::ABaseEnemy()
             SpriteComponents[i]->SetUsingAbsoluteRotation(true);
         }
     }
+    GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+    GetCharacterMovement()->bOrientRotationToMovement = true;
+    GetCharacterMovement()->GravityScale = 1.0f;
+
+    
 }
 
 
@@ -27,13 +33,15 @@ void ABaseEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    GetCapsuleComponent()->SetSimulatePhysics(false);
+
+
     if (Target) {
         MoveTowardsTarget(DeltaTime);
     }
 
     if (Health <= 0)
     {
-        // Уничтожаем все компоненты перед уничтожением объекта
         for (int i = 0; i < 5; i++)
         {
             SpriteComponents[i]->ConditionalBeginDestroy();
@@ -54,18 +62,14 @@ void ABaseEnemy::BeginPlay()
         FRotator CameraFacingRotation(0.0f, 0.0f, -90.0f);
         SpriteComponents[0]->SetWorldScale3D(FVector(-0.2f, 0.2f, 0.2f));
         SpriteComponents[1]->SetWorldScale3D(FVector(-0.2f, 0.2f, 0.2f));
+        
 
         SpriteComponents[1]->SetVisibility(false);
         SpriteComponents[1]->SetHiddenInGame(true);
         
-        // SpriteComponent->SetWorldScale3D(FVector(-SpriteComponent->GetRelativeScale3D().X,
-        //     SpriteComponent->GetRelativeScale3D().X,
-        //     SpriteComponent->GetRelativeScale3D().X));   // x flip
-        
         SpriteComponents[0]->SetWorldRotation(CameraFacingRotation);
         SpriteComponents[1]->SetWorldRotation(CameraFacingRotation);
 
-        //UE_LOG(LogTemp, Warning, TEXT("SpriteComponent Initial Rotation: %s"), *SpriteComponents[0]->GetComponentRotation().ToString());
     }
 
     GetWorld()->GetTimerManager().SetTimer(AttackPulseTimerHandle, this, &ABaseEnemy::AttackPulse, 1.0f/AttackSpeed, true);
@@ -101,13 +105,10 @@ void ABaseEnemy::AttackPulse()
 
     if (OverlappingActors.Num() > 0)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("Overlapped"));
         Target = Cast<Atower_frame>(OverlappingActors[0]);
         if (Target)
         {
-            //UE_LOG(LogTemp, Warning, TEXT("Target Tower found: %s"), *Target->GetName());
 
-            // Смена на SpriteComponent[1]
             if (SpriteComponents[1])
             {
                 SpriteComponents[1]->SetVisibility(true);
@@ -115,12 +116,11 @@ void ABaseEnemy::AttackPulse()
                 SpriteComponents[0]->SetVisibility(false);
                 SpriteComponents[0]->SetHiddenInGame(true);
 
-                // Установка таймера для возврата к SpriteComponent[0]
                 GetWorld()->GetTimerManager().SetTimer(
                     AttackCooldownTimerHandle,
                     this,
                     &ABaseEnemy::ResetSpriteToDefault,
-                    0.5f, // Время ожидания
+                    0.5f, 
                     false
                 );
             }
@@ -130,7 +130,6 @@ void ABaseEnemy::AttackPulse()
 
 void ABaseEnemy::ResetSpriteToDefault()
 {
-    // Возвращение к SpriteComponent[0]
     if (SpriteComponents[0] && SpriteComponents[1])
     {
         SpriteComponents[0]->SetVisibility(true);
@@ -172,9 +171,13 @@ void ABaseEnemy::DetectPulse()
 
     if (OverlappingActors.Num() > 0)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("Overlapped"));
         Target = Cast<Atower_frame>(OverlappingActors[0]);
         Target->TakeDamage(Damage);
+
+        if (Target) {
+            UE_LOG(LogTemp, Warning, TEXT("Target detected: %s"), *Target->GetName());
+        }
+
     }
 }
 

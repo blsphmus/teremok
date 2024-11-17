@@ -5,7 +5,6 @@ ATower::ATower()
 {
     PrimaryActorTick.bCanEverTick = true;
 
-    // Создаем компоненты
     SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("TowerSprite"));
     RootComponent = SpriteComponent;
 
@@ -22,7 +21,6 @@ void ATower::BeginPlay()
 {
     Super::BeginPlay();
     ProjectileSpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 
     GetWorld()->GetTimerManager().SetTimer(
         AttackPulseTimerHandle,
@@ -52,18 +50,7 @@ void ATower::Tick(float DeltaTime)
 
 void ATower::DetectAndAttack()
 {
-    // DrawDebugSphere(
-    //     GetWorld(),
-    //     GetActorLocation(),
-    //     AttackRange,
-    //     32,
-    //     FColor::Green,
-    //     false,
-    //     0.1f,
-    //     0,
-    //     1.0f
-    // );
-
+    
     TArray<AActor*> OverlappingActors;
     TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Visibility));
@@ -90,6 +77,7 @@ void ATower::DetectAndAttack()
     }
 }
 
+
 void ATower::LaunchProjectile()
 {
     if (!Target)
@@ -102,6 +90,7 @@ void ATower::LaunchProjectile()
     ProjectileSpriteComponent->SetWorldLocation(ProjectileStartLocation);
     RotateSpriteToFace(ProjectileSpriteComponent, ProjectileTargetLocation);
 }
+
 
 void ATower::MoveProjectile(float DeltaTime)
 {
